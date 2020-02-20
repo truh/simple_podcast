@@ -1,0 +1,10 @@
+*.sqlite3
+*.pyc
+*.pyo
+__pycache__
+*.DS_Store
+*.egg*
+
+dist/
+.idea/
+result
