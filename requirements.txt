@@ -1,4 +1,6 @@
 aiofiles
 fastapi
 podgen
+pydantic
+sqlalchemy
 uvicorn

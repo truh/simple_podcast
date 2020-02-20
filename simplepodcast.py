@@ -1,10 +1,12 @@
 import datetime
+from typing import Dict
 
 import podgen
 
 from fastapi import FastAPI
 from starlette.responses import Response
 
+from schemas import Podcast, PodcastBase, EpisodeBase, Episode
 
 BASE_URL = "http://localhost:8000"
 
@@ -12,28 +14,28 @@ BASE_URL = "http://localhost:8000"
 app = FastAPI()
 
 
-@app.get("/podcast/")
-def list_podcasts():
-    return {"podcast": "World"}
+@app.get("/podcast")
+def list_podcasts() -> Dict[str, str]:
+    return {"podcast": f"{BASE_URL}/podcast/1"}
 
 
-@app.get("/podcast/{podcast_id}/")
-def read_podcast(podcast_id: str):
-    return {"item_id": podcast_id}
+@app.get("/podcast/{podcast_id}")
+def read_podcast(podcast_id: int) -> Podcast:
+    return Podcast()
 
 
-@app.post("/podcast/")
-def create_podcast(podcast_id: str):
-    return {"item_id": podcast_id}
+@app.post("/podcast")
+def create_podcast(podcast: PodcastBase) -> Podcast:
+    return Podcast()
 
 
-@app.post("/podcast/{podcast_id}/episode/")
-def create_episode(podcast_id: str):
-    return {"item_id": podcast_id}
+@app.post("/podcast/{podcast_id}/episode")
+def create_episode(podcast_id: int, episode: EpisodeBase) -> Episode:
+    return Episode()
 
 
-@app.get("/podcast/{podcast_id}.rss")
-def read_podcast_feed(podcast_id: str):
+@app.get("/podcast/{podcast_id}/feed.rss")
+def read_podcast_feed(podcast_id: int):
     p = podgen.Podcast(
         name="Podcast Name",
         website=BASE_URL,

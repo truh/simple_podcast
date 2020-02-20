@@ -809,6 +809,23 @@ let
       };
     };
 
+    "sqlalchemy" = python.mkDerivation {
+      name = "sqlalchemy-1.3.13";
+      src = pkgs.fetchurl {
+        url = "https://files.pythonhosted.org/packages/af/47/35edeb0f86c0b44934c05d961c893e223ef27e79e1f53b5e6f14820ff553/SQLAlchemy-1.3.13.tar.gz";
+        sha256 = "64a7b71846db6423807e96820993fa12a03b89127d278290ca25c0b11ed7b4fb";
+};
+      doCheck = commonDoCheck;
+      format = "setuptools";
+      buildInputs = commonBuildInputs ++ [ ];
+      propagatedBuildInputs = [ ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://www.sqlalchemy.org";
+        license = licenses.mit;
+        description = "Database Abstraction Library";
+      };
+    };
+
     "starlette" = python.mkDerivation {
       name = "starlette-0.12.9";
       src = pkgs.fetchurl {
