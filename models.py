@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Interval, String
 from sqlalchemy.orm import relationship
-from .database import Base
+from database import Base
 
 
 class Episode(Base):
@@ -15,7 +15,6 @@ class Episode(Base):
     url = Column(String)
     size = Column(Integer)
     duration = Column(Interval)
-    file = Column(String)
 
     podcast_id = Column(Integer, ForeignKey("podcast.id"))
     podcast = relationship("Podcast", back_populates="episodes")

@@ -635,6 +635,25 @@ let
       };
     };
 
+    "python-multipart" = python.mkDerivation {
+      name = "python-multipart-0.0.5";
+      src = pkgs.fetchurl {
+        url = "https://files.pythonhosted.org/packages/46/40/a933ac570bf7aad12a298fc53458115cc74053474a72fbb8201d7dc06d3d/python-multipart-0.0.5.tar.gz";
+        sha256 = "f7bb5f611fc600d15fa47b3974c8aa16e93724513b49b5f95c81e6624c83fa43";
+};
+      doCheck = commonDoCheck;
+      format = "setuptools";
+      buildInputs = commonBuildInputs ++ [ ];
+      propagatedBuildInputs = [
+        self."six"
+      ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://github.com/andrew-d/python-multipart";
+        license = licenses.asl20;
+        description = "A streaming multipart parser for Python";
+      };
+    };
+
     "pytoml" = python.mkDerivation {
       name = "pytoml-0.1.21";
       src = pkgs.fetchurl {

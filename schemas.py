@@ -1,6 +1,7 @@
 from datetime import timedelta
-from typing import List
+from typing import List, Optional
 
+from fastapi import UploadFile
 from pydantic import BaseModel
 
 
@@ -9,15 +10,18 @@ class EpisodeBase(BaseModel):
     long_summary: str = ""
     title: str
     subtitle: str = ""
-    url: str
-    size: int
     duration: timedelta
-    file: str = ""
+
+
+class EpisodeCreate(EpisodeBase):
+    filename: str
 
 
 class Episode(EpisodeBase):
     id: int
     podcast_id: int
+    url: str
+    size: int
 
     class Config:
         orm_mode = True
@@ -27,11 +31,11 @@ class PodcastBase(BaseModel):
     name: str
     description: str
     explicit: bool
-    episodes: List[EpisodeBase] = []
 
 
 class Podcast(BaseModel):
     id: int
+    episodes: List[EpisodeBase] = []
 
     class Config:
         orm_mode = True

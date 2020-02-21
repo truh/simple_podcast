@@ -25,6 +25,7 @@ pycparser==2.19
 pydantic==1.4
 Pygments==2.5.2
 python-dateutil==2.8.1
+python-multipart==0.0.5
 pytoml==0.1.21
 pytz==2019.3
 readme-renderer==24.0
