@@ -4,7 +4,7 @@ from typing import Dict
 
 import podgen
 
-from fastapi import FastAPI, Depends, HTTPException, UploadFile
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, Form, File
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 from starlette.responses import Response
@@ -61,11 +61,11 @@ def create_podcast(podcast: PodcastBase, db: Session = Depends(get_db)) -> Podca
 
 
 @app.post("/podcast/{podcast_id}/episode", response_model=schemas.Episode)
-def create_episode(podcast_id: int, episode: EpisodeCreate, upload_file: UploadFile, db: Session = Depends(get_db)) -> Episode:
+def create_episode(podcast_id: int, upload_file: UploadFile = File(...), summary: str = Form(...), long_summary: str = Form(...), title: str = Form(...), subtitle: str = Form(...), duration: datetime.timedelta = Form(...), db: Session = Depends(get_db)) -> Episode:
     db_podcast = utils.get_podcast(db, podcast_id)
     if db_podcast is None:
         raise HTTPException(status_code=404, detail="Podcast not found")
-    return utils.create_episode(db, podcast_id, episode)
+    return utils.create_episode(db, podcast_id, summary, long_summary, title, subtitle, duration, upload_file)
 
 
 app.mount("/download", StaticFiles(directory=str(UPLOAD_DIR)), name="download")

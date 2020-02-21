@@ -1,10 +1,11 @@
 import os
 import shutil
+from datetime import timedelta
 from pathlib import Path
 from typing import List
 
 import aiofiles
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 import models
@@ -33,16 +34,16 @@ def create_podcast(db: Session, podcast: schemas.PodcastBase) -> models.Podcast:
 
 
 def create_episode(
-    db: Session, podcast_id: int, episode: schemas.EpisodeCreate
+    db: Session, podcast_id: int, summary: str, long_summary: str, title: str, subtitle: str, duration: timedelta, upload_file: UploadFile
 ) -> models.Episode:
     db_episode = models.Episode(
-        summary=episode.summary,
-        long_summary=episode.long_summary,
-        title=episode.title,
-        subtitle=episode.subtitle,
+        summary=summary,
+        long_summary=long_summary,
+        title=title,
+        subtitle=subtitle,
         url="",
         size=0,
-        duration=episode.duration,
+        duration=duration,
         podcast_id=podcast_id,
     )
     db.add(db_episode)
@@ -56,9 +57,9 @@ def create_episode(
 
     try:
         with upload_path.open("wb") as buffer:
-            shutil.copyfileobj(episode.upload_file.file, buffer)
+            shutil.copyfileobj(upload_file.file, buffer)
     finally:
-        episode.upload_file.file.close()
+        upload_file.file.close()
 
     db_episode.url = f"{BASE_URL}/download/podcast_{podcast_id}/episode_{db_episode.id}/{episode.filename}"
     db_episode.size = os.path.getsize(str(upload_path))
