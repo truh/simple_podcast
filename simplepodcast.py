@@ -14,7 +14,7 @@ import schemas
 import utils
 from database import SessionLocal, engine
 from schemas import Podcast, PodcastBase, Episode
-from settings import UPLOAD_DIR, BASE_URL
+from settings import UPLOAD_DIR, PUBLIC_URL
 
 Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
 
@@ -41,9 +41,13 @@ def get_db(request: Request):
 
 
 @app.get("/podcast")
-def list_podcasts(offset: int = 0, limit: int = 100, db: Session = Depends(get_db)) -> Dict[str, str]:
+def list_podcasts(
+    offset: int = 0, limit: int = 100, db: Session = Depends(get_db)
+) -> Dict[str, str]:
     db_podcasts = utils.get_all_podcasts(db, offset, limit)
-    return {podcast.name: f"{BASE_URL}/podcast/{podcast.id}" for podcast in db_podcasts}
+    return {
+        podcast.name: f"{PUBLIC_URL}/podcast/{podcast.id}" for podcast in db_podcasts
+    }
 
 
 @app.get("/podcast/{podcast_id}", response_model=schemas.Podcast)
@@ -60,11 +64,22 @@ def create_podcast(podcast: PodcastBase, db: Session = Depends(get_db)) -> Podca
 
 
 @app.post("/podcast/{podcast_id}/episode", response_model=schemas.Episode)
-def create_episode(podcast_id: int, upload_file: UploadFile = File(...), summary: str = Form(...), long_summary: str = Form(...), title: str = Form(...), subtitle: str = Form(...), duration: datetime.timedelta = Form(...), db: Session = Depends(get_db)) -> Episode:
+def create_episode(
+    podcast_id: int,
+    upload_file: UploadFile = File(...),
+    summary: str = Form(...),
+    long_summary: str = Form(...),
+    title: str = Form(...),
+    subtitle: str = Form(...),
+    duration: datetime.timedelta = Form(...),
+    db: Session = Depends(get_db),
+) -> Episode:
     db_podcast = utils.get_podcast(db, podcast_id)
     if db_podcast is None:
         raise HTTPException(status_code=404, detail="Podcast not found")
-    return utils.create_episode(db, podcast_id, summary, long_summary, title, subtitle, duration, upload_file)
+    return utils.create_episode(
+        db, podcast_id, summary, long_summary, title, subtitle, duration, upload_file
+    )
 
 
 app.mount("/download", StaticFiles(directory=str(UPLOAD_DIR)), name="download")
@@ -78,7 +93,7 @@ def read_podcast_feed(podcast_id: int, db: Session = Depends(get_db)):
 
     p = podgen.Podcast(
         name=db_podcast.name,
-        website=BASE_URL,
+        website=PUBLIC_URL,
         description=db_podcast.description,
         explicit=db_podcast.explicit,
     )
@@ -89,9 +104,7 @@ def read_podcast_feed(podcast_id: int, db: Session = Depends(get_db)):
             title=db_episode.title,
             subtitle=db_episode.subtitle,
             media=podgen.Media(
-                url=db_episode.url,
-                size=db_episode.size,
-                duration=db_episode.duration,
+                url=db_episode.url, size=db_episode.size, duration=db_episode.duration
             ),
         )
         for db_episode in db_podcast.episodes

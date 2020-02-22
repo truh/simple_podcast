@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 import models
 import schemas
-from settings import UPLOAD_DIR, BASE_URL
+from settings import UPLOAD_DIR, PUBLIC_URL
 
 
 def get_all_podcasts(
@@ -34,7 +34,14 @@ def create_podcast(db: Session, podcast: schemas.PodcastBase) -> models.Podcast:
 
 
 def create_episode(
-    db: Session, podcast_id: int, summary: str, long_summary: str, title: str, subtitle: str, duration: timedelta, upload_file: UploadFile
+    db: Session,
+    podcast_id: int,
+    summary: str,
+    long_summary: str,
+    title: str,
+    subtitle: str,
+    duration: timedelta,
+    upload_file: UploadFile,
 ) -> models.Episode:
     db_episode = models.Episode(
         summary=summary,
@@ -69,7 +76,12 @@ def create_episode(
     finally:
         upload_file.file.close()
 
-    db_episode.url = f"{BASE_URL}/download/podcast_{podcast_id}/episode_{db_episode.id}/{filename}"
+    db_episode.url = "%s/download/podcast_%d/episode_%d/%s" % (
+        PUBLIC_URL,
+        podcast_id,
+        db_episode.id,
+        filename,
+    )
     db_episode.size = os.path.getsize(str(upload_path))
     db.commit()
     db.refresh(db_episode)
