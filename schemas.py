@@ -1,7 +1,6 @@
 from datetime import timedelta
-from typing import List, Optional
+from typing import List
 
-from fastapi import UploadFile
 from pydantic import BaseModel
 
 

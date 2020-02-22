@@ -1,10 +1,10 @@
+import logging
 import os
 import shutil
 from datetime import timedelta
 from pathlib import Path
 from typing import List
 
-import aiofiles
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
@@ -50,18 +50,26 @@ def create_episode(
     db.commit()
     db.refresh(db_episode)
 
+    filename = upload_file.filename
+
     upload_dir = Path(UPLOAD_DIR) / f"podcast_{podcast_id}" / f"episode_{db_episode.id}"
-    upload_path = upload_dir / episode.filename
+    upload_path = upload_dir / filename
     if not upload_dir == upload_path.parent:
         raise HTTPException(status_code=404, detail="Invalid filename")
 
     try:
+        upload_dir.mkdir(parents=True, exist_ok=True)
         with upload_path.open("wb") as buffer:
             shutil.copyfileobj(upload_file.file, buffer)
+    except OSError as e:
+        db.delete(db_episode)
+        upload_file.file.close()
+        logging.exception("Unable to store upload to disk. %s", e)
+        raise HTTPException(500, "Unable to store upload to disk. " + str(e))
     finally:
         upload_file.file.close()
 
-    db_episode.url = f"{BASE_URL}/download/podcast_{podcast_id}/episode_{db_episode.id}/{episode.filename}"
+    db_episode.url = f"{BASE_URL}/download/podcast_{podcast_id}/episode_{db_episode.id}/{filename}"
     db_episode.size = os.path.getsize(str(upload_path))
     db.commit()
     db.refresh(db_episode)

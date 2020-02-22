@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Dict
 
 import podgen
-
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, Form, File
 from sqlalchemy.orm import Session
 from starlette.requests import Request
@@ -14,7 +13,7 @@ import models
 import schemas
 import utils
 from database import SessionLocal, engine
-from schemas import Podcast, PodcastBase, EpisodeCreate, Episode
+from schemas import Podcast, PodcastBase, Episode
 from settings import UPLOAD_DIR, BASE_URL
 
 Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
@@ -92,7 +91,7 @@ def read_podcast_feed(podcast_id: int, db: Session = Depends(get_db)):
             media=podgen.Media(
                 url=db_episode.url,
                 size=db_episode.size,
-                duration=datetime.timedelta(db_episode.duration),
+                duration=db_episode.duration,
             ),
         )
         for db_episode in db_podcast.episodes
