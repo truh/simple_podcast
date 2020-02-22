@@ -1,6 +1,6 @@
 import datetime
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
 import podgen
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, Form, File
@@ -67,10 +67,10 @@ def create_podcast(podcast: PodcastBase, db: Session = Depends(get_db)) -> Podca
 def create_episode(
     podcast_id: int,
     upload_file: UploadFile = File(...),
-    summary: str = Form(...),
-    long_summary: str = Form(...),
     title: str = Form(...),
-    subtitle: str = Form(...),
+    subtitle: Optional[str] = Form(None),
+    summary: Optional[str] = Form(None),
+    long_summary: Optional[str] = Form(None),
     duration: datetime.timedelta = Form(...),
     db: Session = Depends(get_db),
 ) -> Episode:
@@ -78,7 +78,14 @@ def create_episode(
     if db_podcast is None:
         raise HTTPException(status_code=404, detail="Podcast not found")
     return utils.create_episode(
-        db, podcast_id, summary, long_summary, title, subtitle, duration, upload_file
+        db,
+        podcast_id,
+        title,
+        subtitle or title,
+        summary or title,
+        long_summary or title,
+        duration,
+        upload_file,
     )
 
 

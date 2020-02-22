@@ -36,10 +36,10 @@ def create_podcast(db: Session, podcast: schemas.PodcastBase) -> models.Podcast:
 def create_episode(
     db: Session,
     podcast_id: int,
-    summary: str,
-    long_summary: str,
     title: str,
     subtitle: str,
+    summary: str,
+    long_summary: str,
     duration: timedelta,
     upload_file: UploadFile,
 ) -> models.Episode:
