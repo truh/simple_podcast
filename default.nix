@@ -19,7 +19,7 @@ stdenv.mkDerivation {
 
         echo '#!${pkgs.bash}/bin/bash' >> $out/bin/simplepodcast
         echo export PYTHONPATH="$out/lib" >> $out/bin/simplepodcast
-        echo ${interpreter}/bin/uvicorn simplepodcast:app >> $out/bin/simplepodcast
+        echo ${interpreter}/bin/uvicorn --host \$LISTEN_HOST --port \$LISTEN_PORT simplepodcast:app >> $out/bin/simplepodcast
         chmod +x $out/bin/simplepodcast
     '';
     buildInputs = [ interpreter ];

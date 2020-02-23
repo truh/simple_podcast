@@ -13,6 +13,14 @@ with lib;
         publicUrl = mkOption {
             type = types.str;
         };
+        listenHost = mkOption {
+            default = "127.0.0.1";
+            type = types.str;
+        };
+        listenPort = mkOption {
+            default = 8000;
+            type = types.port;
+        };
         sqlalchemyDatabaseUrl = mkOption {
             default = "sqlite:///var/lib/simplepodcast/simplepodcast.sqlite3";
             type = types.str;
@@ -42,6 +50,8 @@ with lib;
             };
             environment = {
                 SIMPLEPODCAST_CONFIG = "/etc/simplepodcast.conf";
+                LISTEN_HOST = config.services.simplepodcast.listenHost;
+                LISTEN_PORT = toString config.services.simplepodcast.listenPort;
             };
         };
 
