@@ -4,6 +4,7 @@ import shutil
 from datetime import timedelta
 from pathlib import Path
 from typing import List
+from urllib.parse import quote
 
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
@@ -80,7 +81,7 @@ def create_episode(
         PUBLIC_URL,
         podcast_id,
         db_episode.id,
-        filename,
+        quote(filename),
     )
     db_episode.size = os.path.getsize(str(upload_path))
     db.commit()
