@@ -57,6 +57,7 @@ def list_podcasts(
 @app.get("/podcast/{podcast_id}", response_model=schemas.Podcast)
 def read_podcast(podcast_id: int, db: Session = Depends(get_db)) -> Podcast:
     db_podcast = utils.get_podcast(db, podcast_id)
+    print("db_podcast: %s", db_podcast)
     LOG.info("db_podcast: %s", db_podcast)
     if db_podcast is None:
         raise HTTPException(status_code=404, detail="Podcast not found")
