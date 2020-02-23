@@ -24,6 +24,9 @@ stdenv.mkDerivation {
         echo 'find $src'
         find $src
 
+        echo 'cat $src/utils.py'
+        cat $src/utils.py
+
         echo 'echo $src/*py'
         echo $src/*py
 
