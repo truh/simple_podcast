@@ -17,6 +17,8 @@ stdenv.mkDerivation {
     installPhase = ''
         mkdir -p $out/bin
         mkdir -p $out/lib
+        ls $src
+        echo $src/*py
         cp $src/*py $out/lib
 
         echo '#!${pkgs.bash}/bin/bash' >> $out/bin/simplepodcast
