@@ -17,7 +17,9 @@ stdenv.mkDerivation {
     installPhase = ''
         mkdir -p $out/bin
         mkdir -p $out/lib
+        echo 'ls $src'
         ls $src
+        echo 'echo $src/*py'
         echo $src/*py
         cp $src/*py $out/lib
 
