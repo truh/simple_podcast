@@ -11,6 +11,7 @@ in
 stdenv.mkDerivation {
     name = "simplepodcast";
     src = ./.;
+    unpackPhase = ":";
     installPhase = ''
         mkdir -p $out/bin
         mkdir -p $out/lib
