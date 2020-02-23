@@ -14,8 +14,8 @@ stdenv.mkDerivation {
     unpackPhase = ":";
     installPhase = ''
         mkdir -p $out/bin
-        mkdir -p $out/lib
-        cp $src/*py $out/lib
+
+        ln -s $src $out/lib
 
         echo '#!${pkgs.bash}/bin/bash' >> $out/bin/simplepodcast
         echo export PYTHONPATH="$out/lib" >> $out/bin/simplepodcast
