@@ -11,26 +11,11 @@ in
 stdenv.mkDerivation {
     name = "simplepodcast";
     src = ./.;
-    unpackPhase = ''
-    ls $src
-    '';
+    unpackPhase = ":";
     installPhase = ''
         mkdir -p $out/bin
-        mkdir -p $out/lib
 
-        echo 'ls $src'
-        ls $src
-
-        echo 'find $src'
-        find $src
-
-        echo 'cat $src/utils.py'
-        cat $src/utils.py
-
-        echo 'echo $src/*py'
-        echo $src/*py
-
-        cp $src/*py $out/lib
+        cp -ln -s $src $out/lib
 
         echo '#!${pkgs.bash}/bin/bash' >> $out/bin/simplepodcast
         echo export PYTHONPATH="$out/lib" >> $out/bin/simplepodcast
