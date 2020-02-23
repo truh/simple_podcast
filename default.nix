@@ -15,7 +15,7 @@ stdenv.mkDerivation {
     installPhase = ''
         mkdir -p $out/bin
 
-        cp -ln -s $src $out/lib
+        ln -s $src $out/lib
 
         echo '#!${pkgs.bash}/bin/bash' >> $out/bin/simplepodcast
         echo export PYTHONPATH="$out/lib" >> $out/bin/simplepodcast
