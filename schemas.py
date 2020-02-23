@@ -20,6 +20,11 @@ class EpisodeBase(BaseModel):
 class EpisodeCreate(EpisodeBase):
     filename: str
 
+    class Config:
+        json_encoders = {
+            "duration": lambda _duration: _duration.seconds,
+        }
+
 
 class Episode(EpisodeBase):
     id: int
