@@ -51,7 +51,7 @@ with lib;
             environment = {
                 SIMPLEPODCAST_CONFIG = "/etc/simplepodcast.conf";
                 LISTEN_HOST = config.services.simplepodcast.listenHost;
-                LISTEN_PORT = lib.toString config.services.simplepodcast.listenPort;
+                LISTEN_PORT = toString config.services.simplepodcast.listenPort;
             };
         };
 
