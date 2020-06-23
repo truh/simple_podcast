@@ -11,9 +11,19 @@ class EpisodeBase(BaseModel):
     subtitle: str = ""
     duration: timedelta
 
+    class Config:
+        json_encoders = {
+            "duration": lambda _duration: _duration.seconds,
+        }
+
 
 class EpisodeCreate(EpisodeBase):
     filename: str
+
+    class Config:
+        json_encoders = {
+            "duration": lambda _duration: _duration.seconds,
+        }
 
 
 class Episode(EpisodeBase):

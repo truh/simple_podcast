@@ -1,4 +1,5 @@
 import datetime
+import logging
 from pathlib import Path
 from typing import Dict, Optional
 from urllib.parse import urlparse
@@ -18,6 +19,9 @@ from schemas import Podcast, PodcastBase, Episode
 from settings import UPLOAD_DIR, PUBLIC_URL
 
 Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
+
+
+LOG = logging.getLogger(__name__)
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -53,7 +57,11 @@ def list_podcasts(
 
 @app.get("/podcast/{podcast_id}", response_model=schemas.Podcast)
 def read_podcast(podcast_id: int, db: Session = Depends(get_db)) -> Podcast:
+    print("read_podcast")
+    LOG.info("read_podcast")
     db_podcast = utils.get_podcast(db, podcast_id)
+    print("db_podcast: %s", db_podcast)
+    LOG.info("db_podcast: %s", db_podcast)
     if db_podcast is None:
         raise HTTPException(status_code=404, detail="Podcast not found")
     return db_podcast
