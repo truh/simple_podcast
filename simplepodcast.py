@@ -1,6 +1,7 @@
 import datetime
 from pathlib import Path
 from typing import Dict, Optional
+from urllib.parse import urlparse
 
 import podgen
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, Form, File
@@ -104,16 +105,30 @@ def read_podcast_feed(podcast_id: int, db: Session = Depends(get_db)):
         description=db_podcast.description,
         explicit=db_podcast.explicit,
     )
-    p.episodes += [
-        podgen.Episode(
-            summary=podgen.htmlencode(db_episode.summary),
-            long_summary=podgen.htmlencode(db_episode.long_summary),
-            title=db_episode.title,
-            subtitle=db_episode.subtitle,
-            media=podgen.Media(
-                url=db_episode.url, size=db_episode.size, duration=db_episode.duration
-            ),
+
+    for db_episode in db_podcast.episodes:
+        force_type = None
+        try:
+            file_extension = urlparse(db_episode.url).path.split(".")[-1].lower()
+            if file_extension == "opus":
+                force_type = "audio/ogg"
+            elif file_extension == "wav":
+                force_type = "audio/wav"
+        except:
+            pass
+
+        p.episodes.append(
+            podgen.Episode(
+                summary=podgen.htmlencode(db_episode.summary),
+                long_summary=podgen.htmlencode(db_episode.long_summary),
+                title=db_episode.title,
+                subtitle=db_episode.subtitle,
+                media=podgen.Media(
+                    url=db_episode.url,
+                    size=db_episode.size,
+                    duration=db_episode.duration,
+                    type=force_type,
+                ),
+            )
         )
-        for db_episode in db_podcast.episodes
-    ]
     return Response(p.rss_str(), headers={"Content-Type": "application/rss+xml"})
