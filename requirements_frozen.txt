@@ -12,7 +12,7 @@ h11==0.9.0
 httptools==0.1.1
 idna==2.9
 intreehooks==1.0
-lxml==4.5.0
+lxml==4.6.3
 podgen==1.1.0
 pydantic==1.4
 python-dateutil==2.8.1
