@@ -2,7 +2,7 @@
 
 let
 
-simplepodcast = pkgs.callPackage ./default.nix {};
+simplepodcast = (pkgs.callPackage ./default.nix {}).simplepodcast;
 
 in
 
