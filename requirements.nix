@@ -57,7 +57,7 @@ podgen = buildPythonPackage rec {
   meta = with lib; {
     homepage = "https://podgen.readthedocs.io/en/latest/";
     description = "Clean and simple library which helps you generate podcast RSS feeds";
-    license = [ licenses.bsd3 licenses.lgpl ];
+    license = [ licenses.bsd3 licenses.lgpl3Only ];
     maintainers = with maintainers; [ truh ];
   };
 };
