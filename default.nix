@@ -7,6 +7,7 @@ let
 interpreter = (import ./requirements.nix rec {
   python3 = pkgs.python3;
   buildPythonPackage = python3.pkgs.buildPythonPackage;
+  fetchFromGitHub = pkgs.fetchFromGitHub;
   lib = pkgs.lib;
   fetchPypi = python3.pkgs.fetchPypi;
   lxml = python3.pkgs.lxml;
@@ -14,6 +15,9 @@ interpreter = (import ./requirements.nix rec {
   pytz = python3.pkgs.pytz;
   dateutil = python3.pkgs.dateutil;
   future = python3.pkgs.future;
+  starlette = python3.pkgs.starlette;
+  pydantic = python3.pkgs.pydantic;
+  graphene = pkgs.graphene;
 });
 
 in
@@ -25,7 +29,7 @@ in
     unpackPhase = ":";
     installPhase = ''
       mkdir -p $out/bin
-  
+
       ln -s $src $out/lib
 
       echo '#!${pkgs.bash}/bin/bash' >> $out/bin/simplepodcast

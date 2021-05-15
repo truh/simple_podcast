@@ -1,4 +1,4 @@
-{ python3, buildPythonPackage, lib, fetchPypi, lxml, requests, pytz, dateutil, future }:
+{ python3, buildPythonPackage, fetchFromGitHub, lib, fetchPypi, lxml, requests, pytz, dateutil, future, starlette, pydantic, graphene }:
 
 let
 
@@ -59,6 +59,65 @@ podgen = buildPythonPackage rec {
     description = "Clean and simple library which helps you generate podcast RSS feeds";
     license = [ licenses.bsd3 licenses.lgpl3Only ];
     maintainers = with maintainers; [ truh ];
+  };
+};
+
+starlette = buildPythonPackage rec {
+  pname = "starlette";
+  version = "0.14.2";
+  src = fetchFromGitHub {
+    owner = "encode";
+    repo = pname;
+    rev = version;
+    sha256 = "0fz28czvwiww693ig9vwdja59xxs7m0yp1df32ms1hzr99666bia";
+  };
+  postPatch = ''
+    # remove coverage arguments to pytest
+    sed -i '/--cov/d' setup.cfg
+  '';
+  propagatedBuildInputs = with python3.pkgs; [
+    aiofiles
+    graphene
+    itsdangerous
+    jinja2
+    python-multipart
+    pyyaml
+    requests
+  ];
+  doCheck = false;
+  meta = with lib; {
+    homepage = "https://www.starlette.io/";
+    description = "The little ASGI framework that shines";
+    license = licenses.bsd3;
+    maintainers = with maintainers; [ wd15 ];
+  };
+};
+
+fastapi = buildPythonPackage rec {
+  pname = "fastapi";
+  version = "0.65.0";
+  format = "flit";
+
+  src = fetchFromGitHub {
+    owner = "tiangolo";
+    repo = "fastapi";
+    rev = version;
+    sha256 = "sha256-DPfijCGORF3ThZblqaYTKN0H8+wlhtdIS8lfKfJl/bY=";
+  };
+  postPatch = ''
+    substituteInPlace pyproject.toml \
+      --replace "starlette ==" "starlette >="
+  '';
+  propagatedBuildInputs = [
+    starlette
+    pydantic
+  ];
+  doCheck = false;
+  meta = with lib; {
+    homepage = "https://github.com/tiangolo/fastapi";
+    description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production";
+    license = licenses.mit;
+    maintainers = with maintainers; [ wd15 ];
   };
 };
 
