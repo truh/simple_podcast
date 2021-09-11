@@ -58,6 +58,7 @@ with lib;
         users.users.simplepodcast = {
             createHome = true;
             home = "/var/lib/simplepodcast";
+            isSystemUser = true;
         };
         users.groups.simplepodcast = {
             members = [ "simplepodcast" ];
