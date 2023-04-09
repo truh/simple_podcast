@@ -1,4 +1,4 @@
-{ python3, buildPythonPackage, fetchFromGitHub, lib, fetchPypi, lxml, requests, pytz, dateutils, future, starlette, pydantic, graphene, fastapi }:
+{ python3, buildPythonPackage, fetchFromGitHub, lib, fetchPypi, lxml, requests, pytz, dateutils, future }:
 
 let
 

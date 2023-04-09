@@ -15,10 +15,6 @@ interpreter = (import ./requirements.nix rec {
   pytz = python3.pkgs.pytz;
   dateutils = python3.pkgs.dateutils;
   future = python3.pkgs.future;
-  starlette = python3.pkgs.starlette;
-  pydantic = python3.pkgs.pydantic;
-  graphene = pkgs.graphene;
-  fastapi = python3.pkgs.fastapi;
 });
 
 in
