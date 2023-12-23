@@ -11,12 +11,12 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette.staticfiles import StaticFiles
 
-import models
-import schemas
-import utils
-from database import SessionLocal, engine
-from schemas import Podcast, PodcastBase, Episode
-from settings import UPLOAD_DIR, PUBLIC_URL
+from . import models
+from . import schemas
+from . import utils
+from .database import SessionLocal, engine
+from .schemas import Podcast, PodcastBase, Episode
+from .settings import UPLOAD_DIR, PUBLIC_URL
 
 Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
 
