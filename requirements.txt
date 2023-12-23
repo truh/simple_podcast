@@ -1,7 +1,0 @@
-aiofiles
-fastapi
-podgen
-pydantic
-python-multipart
-sqlalchemy
-uvicorn
