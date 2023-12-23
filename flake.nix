@@ -27,16 +27,24 @@
       packages = {
         simplepodcast = mkPoetryApplication {
           projectDir = self;
-          overrides =
-            overrides.withDefaults (self: super: {
+          overrides = overrides.withDefaults (self: super: {
+            tinytag = super.tinytag.overridePythonAttrs (old: {
+              buildInputs = (old.buildInputs or []) ++ [super.setuptools];
             });
+            podgen = super.podgen.overridePythonAttrs (old: {
+              buildInputs = (old.buildInputs or []) ++ [super.setuptools];
+            });
+          });
         };
         default = self.packages.${system}.simplepodcast;
       };
 
       devShells.default = pkgs.mkShell {
         inputsFrom = [self.packages.${system}.simplepodcast];
-        packages = [pkgs.poetry];
+        packages = [
+          pkgs.poetry
+          pkgs.pre-commit
+        ];
       };
     });
 }
