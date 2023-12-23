@@ -9,9 +9,8 @@ from urllib.parse import quote
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
-import models
-import schemas
-from settings import UPLOAD_DIR, PUBLIC_URL
+from . import models, schemas
+from .settings import PUBLIC_URL, UPLOAD_DIR
 
 
 def get_all_podcasts(
