@@ -39,6 +39,15 @@
         default = self.packages.${system}.simplepodcast;
       };
 
+      devShells.default = pkgs.mkShell {
+        inputsFrom = [self.packages.${system}.simplepodcast];
+        packages = [
+          pkgs.poetry
+          pkgs.pre-commit
+        ];
+      };
+    })
+    // {
       nixosModules.default = {
         config,
         lib,
@@ -110,13 +119,5 @@
             };
           };
         };
-
-      devShells.default = pkgs.mkShell {
-        inputsFrom = [self.packages.${system}.simplepodcast];
-        packages = [
-          pkgs.poetry
-          pkgs.pre-commit
-        ];
-      };
-    });
+    };
 }
